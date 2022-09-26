@@ -1,38 +1,50 @@
-import Head from 'next/head'
-import Image from 'next/image'
+// ReactJS Components
+import { useEffect, useState } from 'react';
 
-export default function Home() {
+// Custom Components
+import Header from '../src/components/header/Header';
+import GalleryContainer from '../src/components/gallery/GalleryContainer';
+import Footer from '../src/components/footer/Footer';
+
+// API & Hooks
+import axios from 'axios';
+import { loadImages } from '../src/lib/load-images';
+
+export default function Home({ imageArray }) {
+  const [images, setImages] = useState([]);
+
+  useEffect(() => {
+    setImages(imageArray);
+  }, [imageArray]);
+
+  const seoData = {
+    title: 'Tech Guilds Next.js Challenge',
+    description: 'Challenge for interview',
+    icon: '/favicon.ico',
+  };
+
   return (
     <div className="container">
-      <Head>
-        <title>Tech Guilds Next.js Challenge</title>
-        <meta name="description" content="Challenge for interview" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <Header data={seoData} />
 
       <main className="main">
-        <h1 className="title">
-          Unsplash Image Gallery
-        </h1>
-        <div className="image-gallery">
-          <h2 className="sub-title">
-              Image gallery will be here!
-          </h2>
+        <h1 className="title">Unsplash Image Gallery</h1>
+        <div className="image-gallery w-full mt-8">
+          <GalleryContainer images={images} />
         </div>
       </main>
 
-      <footer className={"footer"}>
-        <a
-          href="https://www.techguilds.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Created for{' '}
-          <span className={"logo"}>
-            <Image src="/techguilds-logo.webp" alt="Techguilds Logo" width={120} height={21} />
-          </span>
-        </a>
-      </footer>
+      <Footer />
     </div>
-  )
+  );
+}
+
+export async function getStaticProps() {
+  const images = await loadImages();
+
+  return {
+    props: {
+      imageArray: images,
+    },
+  };
 }
