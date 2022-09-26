@@ -1,5 +1,6 @@
 // ReactJS Components
 import { useEffect, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 // Custom Components
 import Header from '../src/components/header/Header';
@@ -23,6 +24,12 @@ export default function Home({ imageArray }) {
     icon: '/favicon.ico',
   };
 
+  const loadMore = async () => {
+    const page = images.length / 20;
+    const { data } = await axios.get(`/api/images/${page + 1}`);
+    setImages([...images, ...data]);
+  };
+
   return (
     <div className="container">
       <Header data={seoData} />
@@ -30,7 +37,14 @@ export default function Home({ imageArray }) {
       <main className="main">
         <h1 className="title">Unsplash Image Gallery</h1>
         <div className="image-gallery w-full mt-8">
-          <GalleryContainer images={images} />
+          <InfiniteScroll
+            dataLength={images.length}
+            next={loadMore}
+            hasMore={true}
+            loader={<h4>Loading...</h4>}
+          >
+            <GalleryContainer images={images} />
+          </InfiniteScroll>
         </div>
       </main>
 
