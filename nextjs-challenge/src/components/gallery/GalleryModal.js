@@ -37,6 +37,7 @@ const GalleryModal = ({ open, data, onClick }) => {
             <a
               href={data.user.links.html}
               target="_blank"
+              rel="noopener noreferrer"
               className="text-sm opacity-50 hover:opacity-100 transition-all"
             >
               @{data.user.username}
